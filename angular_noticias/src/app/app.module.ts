@@ -13,6 +13,7 @@ import { BasePageComponent } from './components/base-page/base-page.component';
 import { CardNoticiaComponent } from './components/card-noticia/card-noticia.component';
 import { NoticiaComponent } from './pages/noticia/noticia.component';
 import { NoticiasRecomendadasComponent } from './components/noticias-recomendadas/noticias-recomendadas.component';
+import { ImageCardComponent } from './components/image-card/image-card.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { NoticiasRecomendadasComponent } from './components/noticias-recomendada
     BasePageComponent,
     CardNoticiaComponent,
     NoticiaComponent,
-    NoticiasRecomendadasComponent
+    NoticiasRecomendadasComponent,
+    ImageCardComponent
   ],
   imports: [
     BrowserModule,

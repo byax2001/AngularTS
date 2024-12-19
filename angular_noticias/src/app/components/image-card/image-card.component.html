@@ -1,0 +1,16 @@
+<div class="d-flex justify-content-center">
+  <!-- Para utilizar el src de un objeto, se debe utilizar la notación de corchetes [src] -->
+  <img  [src]="url_image" alt="Imagen de la noticia" class="card-img-top" style="width: 300px; height: 200px; object-fit: cover;"
+    (load)="onLoaded()"
+    [ngStyle]="{'display': hasloaded ? '' : 'none'}"
+  />
+  <img
+    *ngIf="!hasloaded"
+    src="loader.svg"
+    alt="Cargando..."
+    class="card-img-top"
+    height="100%"
+    width="100%"
+    class="mt-3 bg-black"
+  />
+</div>

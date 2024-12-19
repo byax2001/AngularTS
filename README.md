@@ -1,6 +1,6 @@
 # Angular
 
-# Índice
+## Índice
 
 ## Angular
 ### [Instalación](#instalación-de-angular)
@@ -12,9 +12,9 @@
 - [Instalación de Bootstrap en Angular](#instalación-de-bootstrap-en-angular)
 - [Instalación y uso de la librería UIID (Ocasional)](#libreria-uiid)
 
-
 ### [Definición Angular FrameWork ](#definición-de-angular)
 - [TypeScript para Angular](#typescript-en-angular)
+  - [Clases de Typescript](#clases-typescript)
 - [Elementos Clave de Angular](#elementos-clave-de-angular)
   - [Componentes](#componentes)
   - [Rutas](#rutas)
@@ -34,7 +34,7 @@
   - [Cuando usar cada Metodo](#cuándo-usar-cada-método)
   - [Limpiar Inputs](#limpiar-inputs)
 - [Interfaces en Angular](#que-es-una-interface)
-
+- [Loaders: Elementos visuales mostrados durante la carga de componentes](#loaders)
 
 ### [Lista de Directivas en Angular ](#lista-de-directivas)
 - [*ngIf](#ngif)
@@ -56,8 +56,7 @@
 - [Crear un Servicio](#creación-de-un-servicio)
 - [Crear Interfaces Rapidamente](#creación-rapida-de-interfaces-para-respuestas-y-peticiones-json)
 
-
-
+### [Event Bindings]
 
 
 ### [Peticiones HTTP en Angular](#peticiones-http)
@@ -186,6 +185,10 @@ npm i bootstrap jquery @popperjs/core
 - **Clases y decoradores:** Permite usar el código de JavaScript en forma de clases, con soporte para decoradores que son una característica de TypeScript que permite añadir metadatos a las clases, métodos, propiedades o parámetros, con el fin de modificar su comportamiento o proporcionar información adicional al framework. En Angular, los decoradores son fundamentales para configurar y definir los componentes, servicios, módulos y otras estructuras de la aplicación.
 - **Inyección de dependencias:** Facilita la gestión de dependencias, lo cual es esencial para aplicaciones modulares y escalables.La Inyección es un patrón de diseño utilizado en el desarrollo de software para gestionar las dependencias de un componente o clase de manera eficiente y modular. En lugar de que una clase cree o gestione directamente sus dependencias, estas son proporcionadas por un contenedor de inyección o un framework.
 
+### Clases Typescript
+Para consultar los aspectos teóricos y todos los elementos relacionados con esta tecnología, puedes revisar el [README del apartado de TypeScript: Clases.](https://github.com/byax2001/AngularTS/tree/main/typescript_class)
+
+---
 
 ## Definición de Angular
 Angular es un  **framework de desarrollo frontend** que permite construir aplicaciones web dinámicas, modernas y de alto rendimiento. Se basa en TypeScript y utiliza un enfoque modular para estructurar aplicaciones de manera escalable y reutilizable. Angular proporciona un conjunto de características integradas que facilitan el desarrollo.
@@ -425,8 +428,54 @@ Una interface en TypeScript es una estructura que define la forma de un objeto. 
 - Pueden extender otras interfaces para heredar propiedades.
 
 ---
+### Loaders
+
+Los loaders son elementos visuales que se muestran mientras se cargan componentes, generalmente cuando se realizan peticiones al backend o a APIs externas. Para implementarlos correctamente, se utilizan elementos como `ngIf` y el event binder `(load)` en conjunto con funciones auxiliares. 
+
+Los loaders pueden obtenerse de diversas fuentes o crearse manualmente. En este caso, se utilizara un loader de la página [SVG Loaders](https://samherbert.net/svg-loaders/). El proceso es el siguiente:
+
+1. Seleccionar el SVG deseado en la página.
+2. Descarga o copia el código SVG correspondiente desde el repositorio en GitHub.
+3. Crea un archivo `.svg` y pega el código copiado. Se recomienda colocar este archivo en la carpeta `assets` o `public` de tu proyecto.
+4. Llamar al archivo SVG desde cualquier apartado del proyecto según sea necesario.
+
+### Ejemplo:
+
+En el siguiente ejemplo, se usa `ngStyle` en lugar de `ngIf` para asegurar que el componente se construya correctamente:
+
+```html
+<div class="d-flex justify-content-center">
+  <!-- Para utilizar el src de un objeto, se debe usar la notación de corchetes [src] -->
+  <img 
+    [src]="url_image" 
+    alt="Imagen de la noticia" 
+    class="card-img-top" 
+    style="width: 300px; height: 200px; object-fit: cover;"
+    (load)="onLoaded()"
+    [ngStyle]="{'display': hasLoaded ? '' : 'none'}"
+  />
+  <img
+    *ngIf="!hasLoaded"
+    src="loader.svg"
+    alt="Cargando..."
+    class="card-img-top mt-3 bg-black"
+    height="100%"
+    width="100%"
+  />
+</div>
+```
+
+En este ejemplo:
+- `hasLoaded` es una variable booleana que indica si la imagen ha terminado de cargar.
+- Se utiliza el evento `(load)` para detectar cuándo la imagen principal ha sido cargada.
+- Mientras la imagen se carga, se muestra un loader SVG.
+
+
 
 ## Lista de Directivas
+
+> Para ver mas directivas revisar la [Pagina Oficial](https://angular.dev/guide/directives)
+
 Como se comento anteriormente, en Angular, las directivas son clases que se usan para modificar la apariencia, estructura y funcionalidad de los elementos de una aplicación. Son una parte fundamental del núcleo de Angular y permiten extender la funcionalidad del HTML, entre las que se encuentran estan:
 
 ---
