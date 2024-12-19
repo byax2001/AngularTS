@@ -8,19 +8,35 @@
 - [Instalar Angular CLI](#instalar-angular-cli)
 - [Extensiones de VSCode recomendadas para Angular](#extensiones-de-vscode-recomendadas-para-angular)
 - [Extensiones de Google Chrome recomendadas para Angular](#extensiones-de-chrome-recomendadas-para-angular)
-
-### [Creación de Nuevo Proyecto](#creación-de-un-proyecto-en-angular)
+- [Creación de Nuevo Proyecto](#creación-de-un-proyecto-en-angular)
 - [Instalación de Bootstrap en Angular](#instalación-de-bootstrap-en-angular)
+- [Instalación y uso de la librería UIID (Ocasional)](#libreria-uiid)
 
-### [TypeScript para Angular](#typescript-en-angular)
 
-### [¿Que es Angular?](#definición-de-angular)
+### [Definición Angular FrameWork ](#definición-de-angular)
+- [TypeScript para Angular](#typescript-en-angular)
 - [Elementos Clave de Angular](#elementos-clave-de-angular)
   - [Componentes](#componentes)
   - [Rutas](#rutas)
   - [Directivas](#directivas)
   - [Servicios](#servicios)
-  - [Módulos](#módulos)
+    - [Cómo inyectar y usar servicios en componentes](#uso-de-un-servicio-en-otro-componente)
+    - [Descripción y uso de servicios privados](#uso-de-servicios-privados)
+  - [Módulos](#modulos)
+- [Ejecución de codigo al Inicializar](#ejecutar-código-al-inicializar-una-clase-o-componente-en-typescriptangular)
+  - [Uso del Constructor](#implementar-el-constructor)
+  - [Uso de OnInit](#implementar-oninit)
+- [Añadir eventos a los Inputs](#añadir-eventos-al-presionar-teclas-en-los-inputs)
+- [Obtener información de los Inputs](#obtener-información-de-inputs)
+  - [Uso de NgModel](#uso-de-ngmodel)
+  - [Uso de TagName](#uso-de-tagname-value)
+  - [Uso de ViewChild](#uso-de-viewchild)
+  - [Cuando usar cada Metodo](#cuándo-usar-cada-método)
+  - [Limpiar Inputs](#limpiar-inputs)
+- [Interfaces en Angular](#que-es-una-interface)
+
+
+### [Lista de Directivas en Angular ](#lista-de-directivas)
 - [*ngIf](#ngif)
 - [*ngFor](#ngfor)
   - [Obtener el índice de la iteración](#obtener-el-índice-de-la-iteración)
@@ -30,31 +46,28 @@
 - [ngModel](#ngmodel)
 - [Input()](#input)
 - [Output()](#output)
-### [Crear un Módulo (Opcional)](#crear-un-módulo)
-### [Angular Schematics](#angular-schematics-para-crear-componentes)
 
-### [Crear Componente con comando](#crear-un-componente-con-comando)
+### [Creación de elementos Angular](#creación-de-elementos-en-angular)
+- [Crear un Módulo (Opcional)](#crear-un-módulo)
+- [Crear un Componente (html,css,ts)](#crear-un-componente)
+  - [Angular Schematics](#angular-schematics-para-crear-componentes)
+  - [Crear Componente con comando](#crear-un-componente-con-comando)
+  - [Cambiar el Nombre de un Componente para Reutilización](#modificar-el-nombre-del-selector-de-un-componente-para-reutilización)
+- [Crear un Servicio](#creación-de-un-servicio)
+- [Crear Interfaces Rapidamente](#creación-rapida-de-interfaces-para-respuestas-y-peticiones-json)
 
-### [Servicios Angular](#servicios-en-angular)
-  - [Creación](#creación-de-un-servicio)
 
-### [Cómo inyectar y usar servicios en componentes](#uso-de-un-servicio-en-otro-componente)
 
-### [Descripción y uso de servicios privados](#uso-de-servicios-privados)
 
-### [Instalación y uso de la librería UIID](#libreria-uiid)
 
-### [Descripción de cómo realizar peticiones HTTP en Angular](#peticiones-http)
+### [Peticiones HTTP en Angular](#peticiones-http)
+  - [Agregar Interfaces a Respuestas Http](#agregar-interfaces-a-respuestas-http)
 
-### [Cómo tipar respuestas JSON](#tipar-respuestas-json)
+### [Navegado entre Paginas](#navegación-entre-paginas)
+- [Router Angular](#router)
+- [RouterLinks Angular](#routerlinks)
+- [Navegación entre rutas usando Metodos (Router.navigate)](#navegación-usando-metodos)
 
-### [Cómo configurar y usar Router en Angular](#router)
-
-### [Descripción y uso de RouterLinks](#routerlinks)
-
-### [Navegación entre rutas en TypeScript (Router.navigate)](#navegación-en-typescript)
-
-### [Uso del constructor para ejecutar código antes de todo](#ejecutar-código-antes-de-todo)
 
 
 ## Instalación de Angular
@@ -180,7 +193,7 @@ Angular es un  **framework de desarrollo frontend** que permite construir aplica
 ### Elementos Clave de Angular
 Angular posee:
 
-1. **Componentes**  
+#### **Componentes**  
    Los componentes son las unidades fundamentales de una aplicación en Angular. Representan una vista específica junto con su lógica asociada. Están formados por:  
    - **HTML**: Define la estructura visual.  
    - **CSS**: Estiliza el componente.  
@@ -198,7 +211,7 @@ Angular posee:
      // Lógica del componente
    }
    ```
-- **Rutas**:
+#### **Rutas**:
    Las rutas permiten la navegación entre diferentes vistas de la aplicación. Se configuran en el módulo de enrutamiento y enlazan URL específicas con componentes.
    Ejemplo de configuración de rutas:
    ```typescript
@@ -207,12 +220,12 @@ Angular posee:
    { path: 'about', component: AboutComponent },
    ];
    ```
-- **Directivas:**
+#### **Directivas:**
    Las directivas son instrucciones que interactúan con el DOM para modificarlo o cambiar el comportamiento de los elementos.
    - Directivas de Componentes:Son directivas especiales que incluyen una plantilla HTML asociada, permitiendo la creación de componentes reutilizables (Muy parecida a un componente).  
    - Directivas estructurales: Modifican la estructura del DOM, como *ngIf y *ngFor.
    - Directivas de atributo: Cambian la apariencia o comportamiento de un elemento, como ngClass y ngStyle.
-- **Servicios:**
+#### **Servicios:**
    Los servicios son clases diseñadas para manejar lógica empresarial, operaciones complejas o compartir datos entre componentes. Utilizan la inyección de dependencias para ser accesibles desde cualquier parte de la aplicación.
    Ejemplo de Servicio:
    ```typescript
@@ -225,7 +238,7 @@ Angular posee:
          }
       }
    ```
-- **Modulos:**
+#### **Modulos:**
    Los módulos agrupan y organizan los componentes, directivas, servicios y otros elementos relacionados de una aplicación. El módulo raíz (AppModule) es el punto de entrada de la aplicación Angular.
    Ejemplo de Modulo:
    ```typescript
@@ -237,6 +250,186 @@ Angular posee:
       })
       export class AppModule {}  
    ```
+---
+## Ejecutar Código al Inicializar una Clase o Componente en TypeScript/Angular
+
+En Angular, existen dos enfoques principales para ejecutar código cuando se inicializa una clase o un componente:
+
+### **Implementar el Constructor**
+El **constructor** es una función especial de TypeScript que se ejecuta automáticamente al crear una instancia de una clase. Es útil para realizar configuraciones iniciales rápidas, como la asignación de dependencias inyectadas o ejecutar código básico.
+
+```typescript
+constructor() {
+  console.log('Hola Mundo');
+}
+```
+
+**Nota**: Aunque el constructor puede ser utilizado para inicializaciones simples, en Angular se recomienda no cargarlo con lógica compleja o dependiente del framework.
+
+---
+
+### **Implementar `OnInit`**
+Para manejar lógica más específica del ciclo de vida de un componente en Angular, se utiliza el método **`ngOnInit()`**, que forma parte de la interfaz `OnInit`. Este método es ideal para inicializar datos, realizar configuraciones avanzadas o ejecutar lógica que dependa del framework una vez que se ha creado el componente.
+
+#### Pasos para usar `OnInit`:
+1. **Extender de la interfaz `OnInit`**:
+   Asegúrate de que la clase implemente la interfaz `OnInit`.
+
+2. **Definir el método `ngOnInit()`**:
+   Este método se ejecutará automáticamente una vez que Angular haya terminado de configurar el componente.
+
+**Ejemplo**:
+```typescript
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-ejemplo',
+  templateUrl: './ejemplo.component.html',
+  styleUrls: ['./ejemplo.component.css']
+})
+export class EjemploComponent implements OnInit {
+  
+  constructor() {
+    console.log('Constructor: Componente inicializado.');
+  }
+
+  ngOnInit(): void {
+    console.log('OnInit: Configuración del componente completa.');
+  }
+}
+```
+
+#### ¿Cuándo usar cada uno?
+- **Constructor**: Para inicializar dependencias inyectadas o realizar tareas simples que no dependan de Angular.
+- **`ngOnInit`**: Para ejecutar lógica que necesita que Angular haya completado la configuración del componente, como llamadas a servicios o inicialización de datos provenientes de APIs.
+
+Al usar ambos métodos correctamente, puedes estructurar tu código de manera eficiente y seguir las mejores prácticas de Angular.
+
+---
+
+## Manejo de Eventos e Inputs en Angular: Ejemplos y Detalles
+
+En Angular, trabajar con eventos y obtener información de inputs es esencial para crear aplicaciones interactivas. A continuación, se explican diferentes enfoques para manejar eventos y capturar datos de inputs:
+
+---
+
+### **Añadir Eventos al presionar Teclas en los Inputs**
+
+Angular permite capturar eventos específicos asociados a los inputs de forma sencilla usando **event binding** permitiendo ejecutarse funciones al presionar dichas teclas. Algunos ejemplos comunes incluyen:
+
+#### Ejemplos:
+```html
+<!-- Detectar cuando se presiona "Enter" -->
+<input (keyup.enter)="Funcion()" placeholder="Presiona Enter" />
+
+<!-- Capturar cualquier tecla presionada -->
+<input (keyup)="Funcion($event)" placeholder="Escribe algo" />
+
+<!-- Detectar combinación de teclas: Shift + Enter -->
+<input (keyup.shift.enter)="Funcion()" placeholder="Shift + Enter" />
+```
+
+#### Explicación:
+- **`keyup.enter`**: Escucha específicamente el evento de la tecla "Enter".
+- **`keyup`**: Detecta cualquier tecla presionada y puede pasarse el evento como parámetro.
+- **`keyup.shift.enter`**: Detecta una combinación de teclas, en este caso, "Shift" + "Enter".
+- Existen otros mas, para mas información revisar la [Pagina Oficial](https://angular.dev/guide/templates/event-listeners)
+
+---
+
+### **Obtener Información de Inputs**
+
+Existen varias formas de obtener y manejar la información ingresada en un input. Las más comunes son:
+
+#### **Uso de `[(ngModel)]`**
+Esta técnica permite vincular directamente el valor del input con una propiedad en el componente, mas adelante se explica de mejor forma este componente.
+
+#### Ejemplo:
+```html
+<input [(ngModel)]="nombre" placeholder="Escribe tu nombre" />
+<p>Hola, {{ nombre }}</p>
+```
+
+#### Explicación:
+- **`[(ngModel)]`**: Vincula el valor del input con la propiedad `nombre` del componente en ambas direcciones (lectura y escritura).
+- Asegúrate de importar el módulo `FormsModule` en el archivo `app.module.ts` para usar `ngModel`.
+
+---
+
+#### **Uso de TagName Value**
+Permite acceder al input directamente desde la plantilla usando una referencia local al agregar un `#tag_name`, asignandole asi un identificador unico usando elementos DOM.
+
+#### Ejemplo:
+```html
+<input #miInput type="text" placeholder="Escribe algo" />
+<button (click)="obtenerValor(miInput.value)">Mostrar Valor</button>
+```
+
+#### Explicación:
+- **`#miInput`**: Crea una referencia local al elemento input.
+- **`miInput.value`**: Permite acceder al valor del input directamente desde la plantilla.
+
+---
+
+#### Uso de **`@ViewChild`**
+Esta técnica se utiliza para obtener una referencia al input desde el archivo TypeScript, permitiendo un control más detallado usando elementos DOM.
+
+#### Ejemplo:
+
+```html
+  <input #tagInput type="text" placeholder="Escribe algo" />
+  <button (click)="mostrarValor()">Mostrar Valor</button>
+```
+
+```typescript
+import { Component, ElementRef, ViewChild } from '@angular/core';
+
+@Component({
+  selector: 'app-ejemplo',
+  template: './ejemplo.component.html',
+  styleUrls: './ejemplo.component.css'
+})
+export class EjemploComponent {
+  @ViewChild('tagInput') 
+  public tagInput!: ElementRef<HTMLInputElement>;
+
+  mostrarValor(): void {
+    console.log(this.tagInput.nativeElement.value);
+  }
+}
+```
+
+#### Explicación:
+- **`@ViewChild('tagInput')`**: Crea una referencia al elemento input con el identificador `#tagInput`.
+- **`tagInput.nativeElement.value`**: Permite acceder directamente al valor del input desde el componente.
+
+---
+
+### Cuándo Usar Cada Método:
+- **`[(ngModel)]`**: Ideal para formularios simples o donde se requiere sincronización automática de valores.
+- **TagName Value**: Útil para obtener valores de forma rápida sin necesidad de vinculación bidireccional.
+- **`@ViewChild`**: Recomendado cuando se necesita manipular el DOM del input directamente o realizar operaciones más avanzadas.
+
+---
+
+### Limpiar Inputs:
+Se puede igualar con `''` para realizar dicha accion por ejemplo  `tagInput.nativeElement.value=''` entre otras opcinoes.
+
+
+---
+### Que es una Interface
+Una interface en TypeScript es una estructura que define la forma de un objeto. Actúa como un contrato que asegura que el objeto tenga ciertas propiedades con tipos específicos. Las interfaces son útiles para la verificación de tipos, lo que ayuda a evitar errores y mejora la legibilidad del código.
+
+- Las interfaces pueden tener propiedades opcionales usando el operador ?.
+- También pueden definir métodos que los objetos deben implementar.
+- Pueden extender otras interfaces para heredar propiedades.
+
+---
+
+## Lista de Directivas
+Como se comento anteriormente, en Angular, las directivas son clases que se usan para modificar la apariencia, estructura y funcionalidad de los elementos de una aplicación. Son una parte fundamental del núcleo de Angular y permiten extender la funcionalidad del HTML, entre las que se encuentran estan:
+
+---
 
 ### **`*ngIf`**
 El atributo `*ngIf` se utiliza para mostrar u ocultar un componente en función de una condición booleana. Es importante mencionar que Angular realmente destruye el componente cuando la condición es `false`. 
@@ -405,9 +598,9 @@ export class PadreComponent {
 }
 ```
 
-
-
-### Crear un Módulo
+## Crear Elementos en Angular:
+---
+## Crear un Módulo
 
 Cuando el archivo `app.module.ts` contiene demasiados componentes, se recomienda crear módulos adicionales para organizar el proyecto de manera eficiente. Un módulo es un conjunto que puede incluir páginas, interfaces, servicios y componentes relacionados.
 
@@ -417,6 +610,10 @@ ng g m nombre_modulo
 ```
 
 Al crear componentes asociados a un módulo específico, es importante importar manualmente los archivos `CSS`, `HTML` y `TS` al módulo correspondiente. Esto puede hacerse de manera manual o utilizando la extensión de Visual Studio Code llamada **Angular Schematics**. 
+
+---
+
+## Crear un Componente
 
 ### Angular Schematics para crear Componentes
 1. Crear una carpeta donde se almacenará el componente.
@@ -428,6 +625,8 @@ Al crear componentes asociados a un módulo específico, es importante importar 
 Esto generará automáticamente los archivos `CSS`, `HTML` y `TS` en la carpeta seleccionada e importará el componente únicamente en el módulo que corresponda, evitando su inclusión automatica en `app.module.ts` en caso este envuelto en otro archivo `module.ts` o incluyendolo allí si no.
 Si se utiliza el comando `ng g c nombre_componente` para generar los componentes, estos se agregarán automáticamente al app.module.ts, lo cual es lo que se busca evitar en el caso de que se desee usar mas de un modulo.
 Es fundamental exportar el módulo creado para que pueda ser utilizado desde el archivo `app.module.ts`. Esto se logra añadiendo la propiedad `exports` dentro del módulo creado, y luego importándolo en la sección `imports` de `app.module.ts`. De esta manera, los componentes, servicios o funcionalidades del módulo estarán disponibles en toda la aplicación. 
+
+---
 
 ### Crear un componente con comando
 Para crear un componente cuando no halla necesidad de crear muchos mdoulos utilizar el siguiente comando:
@@ -443,11 +642,24 @@ ng g c nombre_carpeta/nombre_componente
 
 Este comando genera todos los archivos necesarios para el componente (.css, .html, .ts, .spec.ts) y actualiza automáticamente el archivo `app.module.ts` para declarar el nuevo componente.
 
-## Servicios en Angular
+---
+
+### Modificar el Nombre del Selector de un Componente para Reutilización
+
+Para permitir que un componente sea reutilizado sin que su nombre deba comenzar obligatoriamente con el prefijo `app`, es necesario modificar el **selector** del componente. Esto se puede lograr siguiendo estos pasos:
+
+1. Abre el archivo `componente.ts` correspondiente al componente.
+2. Localiza la propiedad `selector` dentro del decorador `@Component`.
+3. Cambia el valor del `selector` al nombre que desees usar para invocar el componente.
+
+Con este ajuste, el componente podrá ser utilizado con el nuevo nombre especificado, sin estar limitado a un prefijo como `app`.
+
+---
+
+## Creación de un Servicio:
 Los servicios en Angular son clases que permiten compartir datos, lógica o funcionalidades entre diferentes componentes y módulos de la aplicación. En esta guía se explicará cómo crearlos y usarlos.
 
 
-### Creación de un Servicio
 1. **Con Comando**
   Angular proporciona herramientas integradas para generar servicios mediante comandos de Angular CLI. Puedes crear un servicio con el siguiente comando:
   ```bash 
@@ -574,17 +786,17 @@ imports: [
 ],
 ```
 
-3. Importa `HttpClient` en el archivo del servicio donde lo necesites:
+3. Importa `HttpClient` en el archivo del servicio donde se necesite:
 ```typescript
 import { HttpClient } from '@angular/common/http';
 ```
 
-4. Añádelo en el constructor del servicio:
+4. Añadirlo en el constructor del servicio:
 ```typescript
 constructor(private http: HttpClient) { }
 ```
 
-### Ejemplo de Peticiones HTTP
+**Ejemplo de Peticiones HTTP**
 
 - **GET** con tres parámetros en la URL:
 ```typescript
@@ -616,15 +828,53 @@ postComments(postId: number, id: number, name: string) {
 
 De esta manera, se pueden realizar peticiones a una API utilizando métodos como **GET**, **POST**, **PUT** o **DELETE**.
 
+---
+
+### Agregar Interfaces a Respuestas HTTP
+
+Para agregar interfaces a las respuestas HTTP y evitar errores al manejar peticiones, sigue estos pasos:
+
+**Archivo `service.ts`:**  
+Definir el tipo de respuesta esperado en el método del servicio. Ejemplo:
+
+```typescript
+getCategorias() {
+    return this.http.get<CategoriaInterface[]>(`${this.url}`, {headers: {Authorization: `Bearer ${this.token}`}});
+}
+```
+
+**Archivo `component.ts`:**  
+Asignar el tipo de respuesta a la variable en el método correspondiente. Ejemplo:
+
+```typescript
+fillCategoria(): void {
+    this.cat_serv.getCategorias().subscribe(
+      (res: CategoriaInterface[]) => { 
+        // Aquí se asigna el tipo de respuesta a la variable "res".
+        // Esto es posible porque en el archivo service.ts se especificó que el tipo de respuesta es un arreglo de objetos de tipo CategoriaInterface.
+        this.categorias = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+}
+```
+
+Si no se especifica el tipo de respuesta en el archivo `service.ts`, se producirá un error al intentar tipar la variable `res` en el archivo `component.ts`.
+
+
 
 ---
 
-## Tipar Respuestas JSON
+## Creación Rapida de Interfaces para respuestas y peticiones JSON
 
-Para tipar posibles respuestas JSON, utiliza herramientas como [QuickType](https://app.quicktype.io/). Selecciona la opción **TypeScript** en la esquina superior derecha para generar interfaces que representen las respuestas esperadas.
+Para tipar posibles respuestas y peticiones JSON, utilizar herramientas como [QuickType](https://app.quicktype.io/). Seleccionar la opción **TypeScript** en la esquina superior derecha para generar interfaces que representen las respuestas esperadas, posteriormente copiar y pegar las interfaces creadas.
 
 ---
 
+## Navegación entre Paginas:
+---
 ## Router
 
 Si no se creó el archivo `app-routing.module.ts`, debes generarlo. A continuación, un ejemplo de archivo de rutas:
@@ -656,6 +906,8 @@ Recordar eliminar todo del archivo `app.component.html` y agregar solo:
 ```html
 <router-outlet></router-outlet>
 ```
+---
+
 ### RouterLinks
 
 `RouterLink` se utiliza para navegar entre páginas, similar al componente `Link` en React. Para habilitarlo:
@@ -679,7 +931,7 @@ imports: [
 <li routerLink="home">Home Page</li>
 ```
 
-### Navegación en TypeScript
+### Navegación usando Metodos
 
 Similar al componente `useNavigate` de React, para navegar entre rutas desde código TypeScript:
 
@@ -698,12 +950,3 @@ export class ServiceNameService {
 this.router.navigate(['/home']);
 ```
 
----
-## Ejecutar Código Antes de Todo
-Usa el constructor en cualquier archivo TypeScript para ejecutar código al inicializar la clase:
-
-```typescript
-constructor() {
-  console.log('Hola Mundo');
-}
-```
