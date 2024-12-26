@@ -28,13 +28,14 @@
   - [Uso de OnInit](#implementar-oninit)
 - [Añadir eventos a los Inputs](#añadir-eventos-al-presionar-teclas-en-los-inputs)
 - [Obtener información de los Inputs](#obtener-información-de-inputs)
-  - [Uso de NgModel](#uso-de-ngmodel)
-  - [Uso de TagName](#uso-de-tagname-value)
-  - [Uso de ViewChild](#uso-de-viewchild)
-  - [Cuando usar cada Metodo](#cuándo-usar-cada-método)
+  - [NgModel](#uso-de-ngmodel)
+  - [TagName](#uso-de-tagname-value)
+  - [ViewChild](#uso-de-viewchild)
+  - [Cuando usar cada Metodo de Extracción de Información en Inputs](#cuándo-usar-cada-método)
   - [Limpiar Inputs](#limpiar-inputs)
 - [Interfaces en Angular](#que-es-una-interface)
 - [Loaders: Elementos visuales mostrados durante la carga de componentes](#loaders)
+- [Transiciones y Efectos especiales en elementos HTML (AnimateCSS)](#transiciones-y-efectos-en-elementos-animatecss)
 
 ### [Lista de Directivas en Angular ](#lista-de-directivas)
 - [*ngIf](#ngif)
@@ -43,6 +44,7 @@
   - [Otros apartados de ngFor](#otros-apartados-de-ngfor)
 - [*ngIf con else y ng-template](#ngif-con-else-y-ng-template)
 - [ngClass](#ngclass)
+- [ngStyle](#ngstyle)
 - [ngModel](#ngmodel)
 - [Input()](#input)
 - [Output()](#output)
@@ -470,6 +472,44 @@ En este ejemplo:
 - Se utiliza el evento `(load)` para detectar cuándo la imagen principal ha sido cargada.
 - Mientras la imagen se carga, se muestra un loader SVG.
 
+---
+### Transiciones y Efectos en Elementos Animate.css
+A través de CSS, es posible crear efectos visuales que simulen transiciones o movimientos especiales en los elementos. Combinando **ngClass** o **ngStyle** con animaciones, se pueden generar componentes dinámicos que reaccionen a acciones externas o funcionen de manera continua. Una herramienta útil para esto es la biblioteca [Animate.css](https://animate.style/).
+
+#### Instalación
+
+Para utilizar Animate.css, primero instálalar con npm:
+
+```powershell
+npm install animate.css --save
+```
+
+Luego, importar las animaciones en el archivo donde se usaran:
+
+```jsx
+import 'animate.css';
+```
+
+O agregar el enlace de la hoja de estilos en el archivo `index.html`:
+
+```html
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/>
+```
+
+#### Uso
+
+1. Consultar la lista completa de animaciones disponibles en la [página oficial de Animate.css](https://animate.style/).
+2. Copiar el nombre de la animación deseada y agrégala a la clase del elemento HTML que se desea animar.
+
+Ejemplo:
+
+```html
+<button [ngClass]="['animate__pulse']">Haz clic aquí</button>
+```
+---
 
 
 ## Lista de Directivas
@@ -558,6 +598,55 @@ En este caso, la clase `text-success` se aplica si la variable `Var_Boolean` es 
 ```
 
 `ngClass` permite manejar estilos dinámicos y responder a cambios en los datos o estados.
+
+---
+### **`ngStyle`**
+
+El atributo `ngStyle` se utiliza para aplicar estilos en línea de manera dinámica a los elementos del DOM. Permite establecer propiedades CSS basadas en valores o expresiones, lo que lo convierte en una herramienta versátil para personalizar la apariencia de los elementos según el estado o los datos.
+
+**Ejemplo básico:**  
+```html
+<div [ngStyle]="{'color': isActive ? 'green' : 'red', 'font-size': '20px'}">
+  Este texto cambia de color según el estado.
+</div>
+```
+
+En este ejemplo:
+- Si la variable `isActive` es `true`, el color será verde.
+- Si es `false`, el color será rojo.
+- El tamaño de fuente se establece en `20px`.
+
+---
+
+**Ejemplo con propiedades CSS dinámicas:**  
+```html
+<div [ngStyle]="estilosDinamicos">
+  Texto con estilos aplicados dinámicamente.
+</div>
+```
+
+En el archivo TypeScript asociado:
+```typescript
+estilosDinamicos = {
+  'background-color': 'lightblue',
+  'padding': '10px',
+  'border-radius': '5px'
+};
+```
+
+---
+
+**Ejemplo combinado con lógica:**  
+```html
+<div [ngStyle]="{'border': hasError ? '2px solid red' : '2px solid green'}">
+  {{ hasError ? 'Hay un error' : 'Todo está correcto' }}
+</div>
+```
+
+En este caso, se utiliza `ngStyle` para aplicar un borde rojo si hay un error (`hasError = true`) o un borde verde si todo está correcto (`hasError = false`).
+
+`ngStyle` es especialmente útil para personalizar estilos de forma dinámica, dependiendo de datos o condiciones del componente.
+
 
 ---
 
