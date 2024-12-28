@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { RegistrarseComponent } from './pages/registrarse/registrarse.component';
-import { HomeComponent } from './pages/home/home.component';
-import { NoticiaComponent } from './pages/noticia/noticia.component';
+
 
 const routes: Routes = [
   {
@@ -15,12 +14,9 @@ const routes: Routes = [
     component:RegistrarseComponent,
   },
   {
-    path:'home',
-    component:HomeComponent,
-  },
-  {
-    path:"notigt/:id",
-    component:NoticiaComponent
+    // Lazy loading
+    path:"notigt",
+    loadChildren: ()=>import('./noticias/noticias.module').then( m_new => m_new.NoticiasModule)
   },
   {
     path:'**',  // Cualquier otra ruta que no este definida redirige a home

@@ -25,15 +25,17 @@ export class RegistrarseComponent {
 
   registrarse(): void {
     this.userRegist.contrasena = md5(this.userRegist.contrasena); // Encriptar contraseña
-    console.log(this.userRegist);
+
     this.loginsrv.postRegister(this.userRegist).subscribe(
       (res: any) => {
         // Verificamos el estado de la respuesta
         if (res.token!== "error") {
           Swal.fire('Usuario Registrado', res.mensaje, 'success'); // Mostrar mensaje de éxito
+          this.userRegist.contrasena = ''; // Limpiar campo de contraseña
           this.router.navigate(['']); // Redirigir a la página de login o inicio
         } else {
           Swal.fire('Error', res.mensaje, 'error'); // Mostrar mensaje de error
+          this.userRegist.contrasena = ''; // Limpiar campo de contraseña
         }
       },
       (err) => {

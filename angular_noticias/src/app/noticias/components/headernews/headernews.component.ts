@@ -39,10 +39,6 @@ export class HeadernewsComponent {
     );
   }
 
-   // Función para redirigir al home
-   goHome(): void {
-    this.router.navigate(['/home']);
-  }
 
   // Función para cerrar sesión
   logout(): void {

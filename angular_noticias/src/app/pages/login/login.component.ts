@@ -33,7 +33,7 @@ export class LoginComponent {
         if (res.token !== "error") {
           // Si el nombre no es "no encontrado", el login fue exitoso
           localStorage.setItem('token', res.token);
-          this.router.navigate(['/home']); // Redirigir al home
+          this.router.navigate(['/notigt/home']); // Redirigir al home
           Swal.fire('Bienvenido', 'Inicio de sesión exitoso', 'success');
         } else {
           Swal.fire('Error', 'Usuario o contraseña incorrectos', 'error'); // Mostrar mensaje de error
@@ -46,9 +46,5 @@ export class LoginComponent {
     // Limpiar los campos de usuario y contraseña
     this.loginPerson.contrasena = '';
     this.loginPerson.usuario = '';
-  }
-
-  registrarse(): void {
-    this.router.navigate(['/registro']);
   }
 }

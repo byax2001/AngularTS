@@ -1,8 +1,6 @@
 # Angular
 
 ## Índice
-
-## Angular
 ### [Instalación](#instalación-de-angular)
 - [Instalar Node.js](#instalar-nodejs)
 - [Instalar Angular CLI](#instalar-angular-cli)
@@ -36,6 +34,8 @@
 - [Interfaces en Angular](#que-es-una-interface)
 - [Loaders: Elementos visuales mostrados durante la carga de componentes](#loaders)
 - [Transiciones y Efectos especiales en elementos HTML (AnimateCSS)](#transiciones-y-efectos-en-elementos-animatecss)
+- [Event Biding](#event-binding)
+- [Lazy Loading (Cargas Perezosas)](#lazy-loading)
 
 ### [Lista de Directivas en Angular ](#lista-de-directivas)
 - [*ngIf](#ngif)
@@ -57,8 +57,6 @@
   - [Cambiar el Nombre de un Componente para Reutilización](#modificar-el-nombre-del-selector-de-un-componente-para-reutilización)
 - [Crear un Servicio](#creación-de-un-servicio)
 - [Crear Interfaces Rapidamente](#creación-rapida-de-interfaces-para-respuestas-y-peticiones-json)
-
-### [Event Bindings]
 
 
 ### [Peticiones HTTP en Angular](#peticiones-http)
@@ -471,6 +469,167 @@ En este ejemplo:
 - `hasLoaded` es una variable booleana que indica si la imagen ha terminado de cargar.
 - Se utiliza el evento `(load)` para detectar cuándo la imagen principal ha sido cargada.
 - Mientras la imagen se carga, se muestra un loader SVG.
+
+---
+### **Event Binding**
+
+El **Event Binding** en Angular permite escuchar eventos del DOM (como clics, teclas presionadas o movimientos del mouse) y ejecutar métodos o expresiones en respuesta a esos eventos. Esto se logra utilizando paréntesis `()` para vincular un evento a una expresión o método del componente.
+
+---
+
+**Ejemplo básico:**  
+```html
+<button (click)="onButtonClick()">Haz clic aquí</button>
+```
+
+En el archivo TypeScript asociado:
+```typescript
+onButtonClick(): void {
+  console.log('¡Botón clickeado!');
+}
+```
+
+Cuando se hace clic en el botón, se ejecuta el método `onButtonClick`, que imprime un mensaje en la consola.
+
+---
+
+**Pasando argumentos al evento:**  
+```html
+<button (click)="onButtonClick('mensaje personalizado')">Haz clic aquí</button>
+```
+
+En el archivo TypeScript:
+```typescript
+onButtonClick(mensaje: string): void {
+  console.log(mensaje);
+}
+```
+
+Este ejemplo pasa un argumento al método al hacer clic en el botón.
+
+---
+
+**Usando `$event` para capturar información del evento:**  
+```html
+<input (input)="onInputChange($event)" placeholder="Escribe algo" />
+```
+
+En el archivo TypeScript:
+```typescript
+onInputChange(event: Event): void {
+  const inputElement = event.target as HTMLInputElement;
+  console.log('Valor ingresado:', inputElement.value);
+}
+```
+
+El objeto `$event` contiene información detallada sobre el evento, como el valor actual del input.
+
+---
+
+**Ejemplo con múltiples eventos:**  
+```html
+<div 
+  (mouseover)="onMouseOver()" 
+  (mouseleave)="onMouseLeave()">
+  Pasa el mouse sobre este texto
+</div>
+```
+
+En el archivo TypeScript:
+```typescript
+onMouseOver(): void {
+  console.log('Mouse sobre el elemento');
+}
+
+onMouseLeave(): void {
+  console.log('Mouse salió del elemento');
+}
+```
+
+---
+
+**Combinar Event Binding con lógica directa:**  
+Aunque no es recomendable abusar de esta práctica, se puede incluir lógica directamente en el evento:  
+```html
+<button (click)="counter = counter + 1">Incrementar contador</button>
+<p>Contador: {{ counter }}</p>
+```
+
+En el archivo TypeScript:
+```typescript
+counter = 0;
+```
+
+El **Event Binding** es una forma eficaz de gestionar la interacción del usuario con la aplicación, permitiendo respuestas dinámicas a eventos del DOM.
+
+---
+## **Lazy Loading**
+
+El **Lazy Loading** en Angular permite cargar módulos de forma perezosa, es decir, solo cuando son necesarios. Esto mejora el rendimiento de la aplicación al reducir la carga inicial y dividir el código en partes más pequeñas y manejables. 
+
+Para implementar `Lazy Loading,` <ins>**es obligatorio crear módulos adicionales**</ins>. Estos módulos se integran en el enrutamiento principal, donde se configuran como rutas que delegan la responsabilidad de cargar sus rutas internas (rutas hijas) al módulo correspondiente. Es importante recordar que el enrutamiento principal usa **`RouterModule.forRoot`**, mientras que los módulos cargados perezosamente deben manejar sus rutas con **`RouterModule.forChild`**.
+
+---
+
+### **Configuración en el Routing Principal**
+
+En el archivo de enrutamiento principal (`app-routing.module.ts`), se utiliza la propiedad `loadChildren` para configurar la carga diferida de un módulo. Un ejemplo básico sería:
+
+```typescript
+const routes: Routes = [
+  {
+    path: 'feature',
+    loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule)
+  },
+];
+```
+
+Con esta configuración:
+- El módulo `FeatureModule` se cargará solo cuando el usuario navegue a una ruta que comience con `/feature`.
+- Las rutas internas del módulo `FeatureModule` serán gestionadas desde su archivo de enrutamiento hijo (`feature-routing.module.ts`).
+
+
+### **Acceso a las Rutas Hijas**
+
+Si el módulo `FeatureModule` define rutas internas como estas:
+```typescript
+const routes: Routes = [
+  { path: 'ruta1', component: Ruta1Component },
+  { path: 'ruta2/:id', component: Ruta2Component },
+];
+```
+
+Entonces, para acceder a esas rutas desde la aplicación, las URLs deben incluir el prefijo del módulo:
+- `/feature/ruta1`
+- `/feature/ruta2/:id`
+
+
+
+### **Ventajas de Lazy Loading**
+
+1. **Mejora el rendimiento inicial:**  
+   Solo se cargan los recursos necesarios al inicio, haciendo que la aplicación sea más rápida para el usuario.
+
+2. **Organización modular:**  
+   Divide el código en módulos más pequeños y específicos, facilitando el mantenimiento y la escalabilidad de la aplicación.
+
+3. **Carga diferida de funcionalidades:**  
+   Las funcionalidades menos utilizadas no afectan el tiempo de carga inicial, mejorando la experiencia del usuario.
+
+4. **Optimización del uso de recursos:**  
+   Reduce el tamaño del paquete inicial (`bundle`) descargado por el navegador, especialmente útil en aplicaciones grandes.
+
+
+
+### **Consideraciones Importantes**
+
+- Cada módulo que se cargue perezosamente debe incluir su propio archivo de enrutamiento y configurarlo con `RouterModule.forChild`.
+- Si se trabaja únicamente con el módulo principal, **no se puede implementar Lazy Loading**, ya que requiere dividir la aplicación en módulos independientes.
+- Lazy Loading es más efectivo en aplicaciones grandes con múltiples funcionalidades o vistas.
+
+Lazy Loading es una práctica esencial para optimizar el rendimiento de aplicaciones de Angular y mejorar la experiencia del usuario, especialmente en escenarios donde no todas las funcionalidades son requeridas de inmediato.
+
+
 
 ---
 ### Transiciones y Efectos en Elementos Animate.css

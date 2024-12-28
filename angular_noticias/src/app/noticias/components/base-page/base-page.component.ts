@@ -13,9 +13,6 @@ export class BasePageComponent {
     this.protectRoute(); // Se protege la ruta
   }
 
-  goHome(): void {
-    this.router.navigate(['/home']);
-  }
 
   // Función para cerrar sesión
   logout(): void {
