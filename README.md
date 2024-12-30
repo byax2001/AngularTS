@@ -61,6 +61,8 @@
 
 ### [Peticiones HTTP en Angular](#peticiones-http)
   - [Agregar Interfaces a Respuestas Http](#agregar-interfaces-a-respuestas-http)
+  - [Pipes en Peticiones](#pipes-en-peticiones-http)
+    - [Combinación de Pipes](#combinación-de-operadores-en-pipes)
 
 ### [Navegado entre Paginas](#navegación-entre-paginas)
 - [Router Angular](#router)
@@ -1161,6 +1163,195 @@ fillCategoria(): void {
 Si no se especifica el tipo de respuesta en el archivo `service.ts`, se producirá un error al intentar tipar la variable `res` en el archivo `component.ts`.
 
 
+### **Pipes en Peticiones HTTP**
+
+En Angular, los **pipes** se utilizan junto con observables (de la librería **RxJS**) para procesar, transformar y manipular los datos emitidos por peticiones HTTP u otros flujos de datos reactivos. Los pipes encadenan **operadores** que permiten manejar la respuesta, transformar datos, manejar errores, introducir demoras, entre otras acciones.
+
+### **RxJS y Observables**
+
+**RxJS (Reactive Extensions for JavaScript)** es una biblioteca que permite trabajar con flujos de datos y eventos asíncronos de forma reactiva. En Angular, los observables generados por servicios como `HttpClient` son fundamentales, y los operadores de RxJS permiten transformar o controlar estos flujos.
+Cuando realizamos una solicitud HTTP con el servicio `HttpClient`, se genera un observable. A través de un pipe, podemos encadenar operadores para transformar la respuesta o manejar errores antes de suscribirnos a ella.
+
+**Ejemplo básico de un pipe con `HttpClient`:**
+
+```typescript
+this.http.get('https://api.ejemplo.com/datos')
+  .pipe(
+    tap(() => console.log('Solicitud enviada')),
+    map(response => response.data), // Transforma la respuesta
+    catchError(error => {
+      console.error('Error en la petición:', error);
+      return throwError(() => new Error('Error en la solicitud'));
+    })
+  )
+  .subscribe(
+    data => console.log('Datos recibidos:', data),
+    error => console.error('Error manejado:', error)
+  );
+```
+
+### **Operadores Comunes en Pipes**
+
+1. **`map`**  
+   Transforma la respuesta de la petición o cualquier emisión del observable.  
+   ```typescript
+   .pipe(
+     map(response => response.resultados)
+   )
+   ```
+
+2. **`catchError`**  
+   Captura y maneja errores durante la emisión del observable.  
+   ```typescript
+   .pipe(
+     catchError(error => {
+       console.error('Error:', error);
+       return throwError(() => new Error('Error personalizado'));
+     })
+   )
+   ```
+
+3. **`tap`**  
+   Realiza efectos secundarios (como logs) sin alterar los datos emitidos, practicamente permite realizar accciones en medio de peticiones sin que hayan efectos secundarios si asi se desea, se pueden realizar varios tap en un solo pipe.
+
+   ```typescript
+   .pipe(
+     tap(data => console.log('Datos recibidos:', data))
+   )
+   ```
+
+4. **`filter`**  
+   Filtra las emisiones del observable según una condición.  
+   ```typescript
+   .pipe(
+     filter(usuario => usuario.activo)
+   )
+   ```
+
+5. **`delay`**  
+   Introduce un retraso en las emisiones del observable. Esto es útil para simular demoras en las respuestas de una API.  
+   ```typescript
+   .pipe(
+     delay(2000) // Retrasa 2 segundos
+   )
+   ```
+
+6. **`mergeMap`**  
+   Transforma las emisiones en nuevos observables y aplana las respuestas. Ideal para peticiones encadenadas.  
+   ```typescript
+   .pipe(
+     mergeMap(usuario => this.http.get(`https://api.ejemplo.com/detalle/${usuario.id}`))
+   )
+   ```
+
+7. **`switchMap`**  
+   Similar a `mergeMap`, pero cancela las solicitudes anteriores si llega una nueva.  
+   ```typescript
+   .pipe(
+     switchMap(() => this.http.get('https://api.ejemplo.com/actualizado'))
+   )
+   ```
+
+8. **`concatMap`**  
+   Ejecuta observables en orden secuencial, esperando que cada uno complete antes de procesar el siguiente.  
+   ```typescript
+   .pipe(
+     concatMap(data => this.http.get(`https://api.ejemplo.com/detalle/${data.id}`))
+   )
+   ```
+   
+9. **`debounceTime`  (Ejecución de acciones tras una pausa al escribir luego de iniciar a hacerlo)**  
+   Introduce un retraso específico antes de emitir un valor. Es útil para evitar realizar múltiples peticiones en un corto periodo de tiempo, como en búsquedas o entradas de texto. Solo se emite el último valor tras el retraso configurado si no se reciben nuevas emisiones. En resumen **espera a que el usuario deje de escribir luego de iniciar a hacerlo durante un periodo de tiempo para ejecutar la acción correspondiente**.
+
+   **Ejemplo 1:**
+   ```typescript
+   this.searchInput.valueChanges
+     .pipe(
+       debounceTime(300), // Espera 300ms después del último cambio
+       distinctUntilChanged(), // Evita emitir valores repetidos consecutivamente
+       switchMap(query => this.http.get(`https://api.ejemplo.com/busqueda?q=${query}`))
+     )
+     .subscribe(
+       resultados => console.log('Resultados:', resultados),
+       error => console.error('Error:', error)
+     );
+   ```
+   En este caso, se evita realizar múltiples peticiones mientras el usuario sigue escribiendo, optimizando el rendimiento y reduciendo la carga en el servidor.
+
+  **Ejemplo 2: Implementación con `debounceTime` y Limpieza de Suscripciones**
+
+  En este ejemplo, se utiliza un `Subject` llamado `debouncer` para manejar las emisiones de valores y un `EventEmitter` (`onDebounce`) para emitir el valor final después de un tiempo especificado. Además, se incluye una suscripción (`debouncerSubscription`) que permite desuscribirse correctamente cuando el componente se destruye, lo cual es esencial para evitar fugas de memoria, especialmente en escenarios donde el componente puede ser eliminado, como al cambiar de página.
+
+  ```typescript
+  private debouncer: Subject<string> = new Subject<string>();
+  private debouncerSuscription?: Subscription;
+
+  @Output()
+  public onDebounce = new EventEmitter<string>();
+
+  ngOnInit(): void {
+    this.debouncerSuscription = this.debouncer
+      .pipe(
+        debounceTime(300) // Retraso de 300 ms antes de emitir el valor
+      )
+      .subscribe(value => {
+        this.onDebounce.emit(value); // Emite el valor final procesado
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.debouncerSuscription?.unsubscribe(); // Limpia la suscripción al destruir el componente
+  }
+  ```
+
+  > **Nota:** Aunque el comportamiento principal puede lograrse con solo `onDebounce` y `debouncer`, se agrega `debouncerSuscription` para garantizar que la suscripción sea limpiada adecuadamente cuando el componente se destruya, mejorando la estabilidad y evitando posibles problemas de rendimiento o memoria.
+
+### **Combinación de Operadores en Pipes**
+
+Podemos combinar operadores para realizar operaciones más complejas, como manejar errores, filtrar respuestas y realizar peticiones encadenadas:
+
+```typescript
+this.http.get('https://api.ejemplo.com/usuarios')
+  .pipe(
+    tap(() => console.log('Iniciando la petición')),
+    filter(usuario => usuario.activo),
+    map(usuario => usuario.nombre),
+    delay(1000), // Retrasa las emisiones 1 segundo
+    mergeMap(nombre => this.http.get(`https://api.ejemplo.com/detalles/${nombre}`)),
+    catchError(error => {
+      console.error('Error durante el flujo:', error);
+      return throwError(() => new Error('Error manejado en el flujo'));
+    })
+  )
+  .subscribe(
+    detalles => console.log('Detalles recibidos:', detalles),
+    error => console.error('Error capturado:', error)
+  );
+```
+
+---
+
+### **Pipes que Transforman o Retornan Datos**
+
+Algunos operadores, como `map` o `filter`, modifican o seleccionan datos específicos de las emisiones. Otros, como `catchError` o `switchMap`, pueden cambiar completamente la respuesta o interrumpir el flujo del observable según sea necesario.
+
+---
+
+### **Ventajas de Usar Pipes y RxJS en Angular**
+
+1. **Transformación de datos:**  
+   Permite preparar las respuestas antes de entregarlas al suscriptor.
+
+2. **Manejo de errores robusto:**  
+   Con operadores como `catchError`, se puede personalizar cómo se gestionan los errores.
+
+3. **Modularidad y claridad:**  
+   Los pipes permiten encadenar múltiples operadores en un flujo lógico y fácil de entender.
+
+4. **Flexibilidad:**  
+   RxJS ofrece una amplia gama de operadores para manejar prácticamente cualquier escenario de datos reactivos.
+
+El uso de pipes y operadores RxJS es fundamental en Angular para trabajar con flujos de datos de manera eficiente y elegante.
 
 ---
 

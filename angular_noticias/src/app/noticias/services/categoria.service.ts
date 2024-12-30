@@ -1,6 +1,7 @@
 import { CategoriaInterface } from './../interfaces/CategoriaInterface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, Observable, of } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class CategoriaService {
@@ -9,8 +10,11 @@ export class CategoriaService {
   constructor(private http: HttpClient) { }
 
   //Para Insertar una Interface de Categoria realizar lo siguiente
-  getCategorias() {
-    return this.http.get<CategoriaInterface[]>(`${this.url}`, {headers: {Authorization: `Bearer ${this.token}`}});
+  getCategorias():Observable<CategoriaInterface[]> { //El Observable es un tipo de dato que se utiliza para manejar eventos asincronos
+    return this.http.get<CategoriaInterface[]>(`${this.url}`, {headers: {Authorization: `Bearer ${this.token}`}})
+    .pipe(
+      catchError((err) => of([])) // En caso de error, se retorna un arreglo vacío
+    );
   }
 
 

@@ -1,59 +1,27 @@
 # Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.3.
+## Descripción
+- **Pantalla Principal:** Muestra un listado de noticias (título, imagen, descripción) obtenidas de un endpoint del backend.
+- **Detalles de Noticia:** Muestra la información completa de una noticia al hacer clic en ella (título, imagen, cuerpo, fecha) con un botón para regresar a la lista.
+- **Noticias Recomendadas:** En la página de detalles, muestra al menos 3 noticias relacionadas.
+- **Navegación:** Implementa una barra de navegación simple con enlaces a "Inicio" y "Categorías".
+- **Autenticación:** Implementa autenticación basada en JWT para proteger los endpoints del backend.
 
-## Development server
+### Pantalla Principal: 
+- Al acceder a la aplicación, se muestra una página principal con un componente que contraiga una lista de al menos 5 noticias. 
+- Cada noticia muestra el título, una imagen y una breve descripción.
+- La información de las noticias proviene del backend a través de una llamada a la API. 
 
-To start a local development server, run:
+## Imagenes:
+### Ingreso:
+![ingreso](https://github.com/user-attachments/assets/dd8ab687-1422-4024-be8d-fa41059ce7f3)
+### Registro:
+![registro](https://github.com/user-attachments/assets/5e2ea459-cf82-4e23-9f2e-1df85ba8dfdb)
+### Home:
+![home](https://github.com/user-attachments/assets/8c292bdf-6981-4b5e-ab9f-7c726797007e)
+### Noticias Filtradas por Categoria:
+![homefiltradocategoria](https://github.com/user-attachments/assets/2c2d1826-9d3d-488a-a2d5-eae958df72c4)
+### Detalles de la noticia:
+![detallenoticia](https://github.com/user-attachments/assets/6f74458a-3ea4-4fb6-8db6-52f27cccad48)
 
-```bash
-ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
