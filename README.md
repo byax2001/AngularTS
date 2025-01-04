@@ -8,6 +8,11 @@
 - [Extensiones de Google Chrome recomendadas para Angular](#extensiones-de-chrome-recomendadas-para-angular)
 - [Creación de Nuevo Proyecto](#creación-de-un-proyecto-en-angular)
 - [Instalación de Bootstrap en Angular](#instalación-de-bootstrap-en-angular)
+- [Instalación de PrimeNG y PrimeFlex en Angular](#instalar-primeng-en-angular)
+  - [Instalación de PrimeNG](#instalar-primeng)
+  - [Instalación de PrimeFlex](#instalar-primeflex)
+- [Instalación de Angular Material]
+- [Bootstrap vs PrimeNG vs Angular Material]
 - [Instalación y uso de la librería UIID (Ocasional)](#libreria-uiid)
 
 ### [Definición Angular FrameWork ](#definición-de-angular)
@@ -130,14 +135,28 @@ En caso de que los comandos de Angular CLI (`ng`) generen errores, abrir PowerSh
 Set-ExecutionPolicy Unrestricted
 ```
 
-1. Ejecuta el siguiente comando para crear un nuevo proyecto:
-```
+1. Crear un nuevo proyecto
+
+Para trabajar como en versiones anteriores (previo a los cambios de Angular 18), utiliza el siguiente comando:
+
+```bash
 ng new name_proyecto_minusculas --no-standalone
 ```
+
 - Opciones durante la configuración:
-   - Escribe "y" cuando se solicite confirmar.
-   - Selecciona CSS como opción de estilos.
-   - Si se te pregunta por SSG/Prerendering, selecciona "N" para evitar configuraciones avanzadas y mantener el manejo estándar.
+  - Escribe "y" para confirmar cuando se solicite.
+  - Selecciona **CSS** como opción de estilos.
+  - Si se pregunta por **SSG/Prerendering**, elige "N" para evitar configuraciones avanzadas.
+
+Para trabajar con la versión actual de Angular, usa uno de estos comandos:
+
+```bash
+ng new name_proyecto_minusculas
+```
+
+```bash
+npm init @angular name_proyecto_minusculas
+```
 
 2. Una vez creado el proyecto, para compilarlo utilizar el siguiente comando:
 ```powershell
@@ -178,6 +197,67 @@ npm i bootstrap jquery @popperjs/core
 ]
 ```
 4. Correr nuevamente el servidor y verificar instalación.
+
+---
+
+## Instalar PrimeNG y PrimeFlex en Angular
+
+> [Página Oficial para Instalación](https://primeng.org/installation)
+PrimeNG es una biblioteca que proporciona una serie de componentes ya creados. Además, con `PrimeFlex`, se puede personalizar la vista de manera similar a Bootstrap, tanto en componentes propios de PrimeNG como en los creados manualmente en apartados como el color, los margenes, el padding, el diseño responsivo, etc.
+
+### Instalar PrimeNG
+
+1. Ejecutar los siguientes comandos en tu terminal:
+
+```powershell
+npm install primeng
+npm install primeng @primeng/themes
+npm install primeicons
+
+```
+
+2. Agregar la configuración en el archivo `angular.config.ts`:
+
+```typescript
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    }),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes)
+  ]
+};
+```
+3. Realizar el siguiente import en el archivo `style.css` de la app
+
+```css
+@import "primeicons/primeicons.css";
+```
+### Instalar PrimeFlex
+
+> [Página Oficial de Instalación](https://primeflex.org/installation)  
+
+1. Ejecutra el siguiente comando en la terminal:
+
+```powershell
+npm install primeflex
+```
+
+2. Agregar la referencia en el archivo `angular.json`, en el apartado `styles` dentro del área de `build` (aproximadamente en la línea 35):
+
+```yml
+/node_modules/primeflex/primeflex.css
+```
+
 ---
 
 ## Typescript en Angular

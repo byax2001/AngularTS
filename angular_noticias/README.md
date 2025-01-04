@@ -1,5 +1,7 @@
 # Frontend
 
+> **NOTA:** Este proyecto implementa las Lazy Loading (Cargas Perezosas), Lazy Images/componentes (Mostrar elementos por default,**como Loadings**, mientras cargan los componentes deseados ), el uso de JWT para las peticiones a apis y el uso de Bootstrap.
+
 ## Descripción
 - **Pantalla Principal:** Muestra un listado de noticias (título, imagen, descripción) obtenidas de un endpoint del backend.
 - **Detalles de Noticia:** Muestra la información completa de una noticia al hacer clic en ella (título, imagen, cuerpo, fecha) con un botón para regresar a la lista.
