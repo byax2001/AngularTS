@@ -8,10 +8,11 @@
 - [Extensiones de Google Chrome recomendadas para Angular](#extensiones-de-chrome-recomendadas-para-angular)
 - [Creación de Nuevo Proyecto](#creación-de-un-proyecto-en-angular)
 - [Instalación de Bootstrap en Angular](#instalación-de-bootstrap-en-angular)
-- [Instalación de PrimeNG y PrimeFlex en Angular](#instalar-primeng-en-angular)
+- [Instalación de PrimeNG y PrimeFlex en Angular](#instalar-primeng-y-primeflex-en-angular)
   - [Instalación de PrimeNG](#instalar-primeng)
   - [Instalación de PrimeFlex](#instalar-primeflex)
-- [Instalación de Angular Material]
+- [Instalación de Angular Material UI](#instalar-angular-material)
+  - [Iconos Angular Material](#iconos-angular-material)
 - [Bootstrap vs PrimeNG vs Angular Material]
 - [Instalación y uso de la librería UIID (Ocasional)](#libreria-uiid)
 
@@ -41,6 +42,12 @@
 - [Transiciones y Efectos especiales en elementos HTML (AnimateCSS)](#transiciones-y-efectos-en-elementos-animatecss)
 - [Event Biding](#event-binding)
 - [Lazy Loading (Cargas Perezosas)](#lazy-loading)
+- [Variables de Entorno](#variables-de-entorno)
+- [Comunicación entre Modulos](#comunicación-entre-módulos)
+  - [Comunicación Común entre Modulos](#comunicación-comun-entre-modulos)
+  - [Comunicación Global](#comunicación-global)
+  - [Modulo para Centralización de Componentes de Librerias](#crear-un-módulo-centralizado-de-recursos-para-librerias)
+  - [Ventajas de la Centralización en un Modulo](#ventajas-de-la-centralización-en-un-módulo)
 
 ### [Lista de Directivas en Angular ](#lista-de-directivas)
 - [*ngIf](#ngif)
@@ -255,8 +262,49 @@ npm install primeflex
 2. Agregar la referencia en el archivo `angular.json`, en el apartado `styles` dentro del área de `build` (aproximadamente en la línea 35):
 
 ```yml
-/node_modules/primeflex/primeflex.css
+node_modules/primeflex/primeflex.css
 ```
+
+---
+## Instalar Angular Material
+
+>[Pagina Oficial Angular Material](https://material.angular.io/guide/getting-started)
+
+1. Ejecutar el siguiente comando en la terminal:
+```powershell
+ng add @angular/material
+```
+
+2. Durante la instalación, aparecerá el mensaje:  
+   `The package @angular/material@15.2.9 will be installed and executed. Would you like to proceed?`  
+   Responder **Yes**.
+
+3. Se pedirá que se elija un esquema de color para el tema (como indigo/pink, deep purple/amber, etc.).  
+   Seleccionar el deseado y presionar **Enter**.  
+   ![Install1](https://github.com/user-attachments/assets/12471222-7941-46bd-85d0-846ca78d0476)
+
+4. Luego, se preguntará:  
+   `Set up global Angular Material typography styles.`  
+   Responder **Yes** para establecer la tipografía de Angular de forma global.
+
+5. Finalmente, se consultará si deseas incluir y habilitar el módulo de animaciones de Angular:  
+   `Include the Angular animations module?`  
+   Responde3 **Yes** si se desea habilitar las animaciones.
+   
+### Iconos Angular Material
+
+[Pagina Oficial Iconos Material](https://fonts.google.com/icons?hl=es-419)
+
+1. Accede al enlace para explorar la colección de íconos disponibles.
+
+2. Escoge el ícono deseado.
+
+3. En la página del ícono seleccionado, dirígete a la pestaña **Android** o **Apple** para obtener el nombre del ícono.
+
+4. Utiliza el nombre del ícono dentro de la etiqueta `mat-icon` de la siguiente manera:  
+   ```html
+   <mat-icon>nombre_del_icono</mat-icon>
+   ```
 
 ---
 
@@ -711,9 +759,111 @@ Entonces, para acceder a esas rutas desde la aplicación, las URLs deben incluir
 
 Lazy Loading es una práctica esencial para optimizar el rendimiento de aplicaciones de Angular y mejorar la experiencia del usuario, especialmente en escenarios donde no todas las funcionalidades son requeridas de inmediato.
 
+---
 
+## **Variables de Entorno**
+
+### Creación de archivos de entorno en Angular
+
+Para crear los archivos de entorno y configurarlos de manera automática, ejecutar el siguiente comando:  
+```bash
+ng generate environments
+```
+
+### Resultado del comando:
+- Se creará una carpeta llamada `environments` que contendrá los archivos:  
+  - `environment.ts`  
+  - `environment.prod.ts`
+- Además, se configurará automáticamente la propiedad **fileReplacements** en el archivo `angular.json`.
+
+### Requisitos de la versión de Angular:
+Este comando solo está disponible en versiones de Angular **17 o superiores**. Si se usndo una versión anterior, seguir estos pasos:
+
+1. Verificar la versión de Angular ejecutando:  
+   ```bash
+   ng version
+   ```
+
+2. Si la versión es menor a 17, crear los archivos de entorno manualmente y agregar esta configuración en el archivo `angular.json` en el apartado **production** (cerca de la línea 35):  
+   ```json
+   "production": {
+       "fileReplacements": [
+           {
+               "replace": "src/environments/environment.ts",
+               "with": "src/environments/environment.prod.ts"
+           }
+       ],
+       ...
+   }
+   ```
+
+### Uso de las variables de entorno
+Después de configurar los archivos, exportar las variables del archivo `environment.ts` al servicio o archivo donde las necesites.
 
 ---
+
+## Comunicación entre Módulos
+
+En Angular, la comunicación entre módulos requiere una configuración adecuada de importaciones y exportaciones, estas configuraciones permiten compartir componentes entre estos, así como utilizar modulos como puntos de centralización para importar y exportar componentes de librerias para mayor legibilidad (Como por ejemplo `PrimeNG UI` o `Angular Material UI`).
+
+### Comunicación Comun Entre Modulos
+
+Para que los componentes de un módulo puedan ser utilizados en otro, seguir estos pasos:
+
+1. En el archivo `emisor.module.ts`, exportar los componentes que se desea compartir:  
+
+   ```typescript
+   @NgModule({
+       declarations: [ComponenteA, ComponenteB],
+       exports: [ComponenteA, ComponenteB]
+   })
+   export class EmisorModule {}
+   ```
+
+2. En el archivo `receptor.module.ts`, importar el módulo del que provienen los componentes:  
+
+   ```typescript
+   @NgModule({
+       imports: [EmisorModule]
+   })
+   export class ReceptorModule {}
+   ```
+
+De esta manera, los componentes **ComponenteA** y **ComponenteB** estarán disponibles para su uso en el módulo receptor.
+
+### Comunicación Global
+
+Si se necesita que varios módulos hermanos compartan componentes o bien que un componente pueda ser accedido en cualquier parte de la aplicación, se puede optar por exportar al `app.module.ts` (Ya que este es el punto central donde convergen todos los modulos):
+
+```typescript
+  @NgModule({
+    imports: [EmisorModule, ReceptorModule],
+    exports: [EmisorModule]
+  })
+  export class AppModule {}
+```  
+Esto permite que cualquier módulo registrado en `AppModule` pueda acceder a los componentes exportados.
+
+### **Crear un Módulo Centralizado de Recursos para Librerias**  
+
+Crear un módulo específico para gestionar las importaciones y exportaciones de bibliotecas externas o componentes compartidos. Por ejemplo:  
+
+```typescript
+     @NgModule({
+         imports: [MatButtonModule, MatIconModule, NgPrimeModule],
+         exports: [MatButtonModule, MatIconModule, NgPrimeModule]
+     })
+     export class SharedModule {}
+```  
+Este enfoque evita cargar configuraciones extensas directamente en `app.module.ts` y mejora la organización del proyecto.
+
+### Ventajas de la Centralización en un Módulo
+- **Modularidad:** Facilita la reutilización de componentes y módulos en diferentes partes del proyecto.  
+- **Escalabilidad:** Reduce la carga de trabajo en `app.module.ts`.  
+- **Flexibilidad:** Permite decidir si los recursos serán compartidos de forma global o limitada a ciertos módulos.  
+
+---
+
 ### Transiciones y Efectos en Elementos Animate.css
 A través de CSS, es posible crear efectos visuales que simulen transiciones o movimientos especiales en los elementos. Combinando **ngClass** o **ngStyle** con animaciones, se pueden generar componentes dinámicos que reaccionen a acciones externas o funcionen de manera continua. Una herramienta útil para esto es la biblioteca [Animate.css](https://animate.style/).
 
