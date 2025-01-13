@@ -2,10 +2,26 @@
 
 Este proyecto incluye las siguientes características:
 
-- **Angular Material** y **PrimeFlex** para diseño responsivo.  
-- **Variables de entorno** para configuración dinámica.  
-- Una plantilla base llamada **Layout** que facilita la creación de páginas que comparten elementos comunes como **navbar** y **footbar**. Esto es útil para casos como una serie de páginas tras iniciar sesión.
-- **Uso de Pipes Personalizados**: Se implementaron **pipes personalizados** para manipular los datos sin modificar su origen.  
+- **Angular Material** y **PrimeFlex**: Implementación de diseño responsivo y estilizado.
+- **Variables de entorno**: Configuración dinámica adaptable a diferentes entornos.
+- **Plantilla base `Layout`**: Permite la creación de páginas reutilizando elementos comunes como **navbar** y **footbar**. Ideal para flujos que incluyen varias páginas tras iniciar sesión.
+- **Pipes Personalizados**: Uso de **pipes** para transformar y mostrar datos sin alterar su estructura original.
+- **Inputs con Autocompletado**.
+- **Tarjetas (Cards)** para organizar información visualmente.
+- **Dialogs/Modals** con **Angular Material**.
+  ![Modal](https://github.com/user-attachments/assets/17b37e26-2902-418f-95f2-e164036075d5)
+- **SnackBar Angular Material**: Notificaciones rápidas que aparecen en la parte inferior de la pantalla para informar sobre un estado o acción.
+  ![Snackbar](https://github.com/user-attachments/assets/5a585cf8-9cfe-45a5-bd52-59b2827ec2f6)
+
+---
+
+## Indice
+- [Pipe Personalizado](#pipe-personalizado)
+- [Backend del Proyecto](#backend)
+  - [Instrucciones para Ejecutar el Backend](#instrucciones-para-ejecutar-el-backend)
+- [Componentes Usados de Angular Material](#angular-material)
+
+---
 
 ## Pipe Personalizado
 
@@ -21,7 +37,7 @@ Se creó un pipe personalizado llamado `heroImage`, cuya función es generar una
 
 Este enfoque permite gestionar dinámicamente las imágenes de los héroes sin modificar la estructura original de los datos.
 
-
+---
 
 ## Backend
 
@@ -38,11 +54,27 @@ En el archivo `package.json` de Angular, se agregó el siguiente script:
   ```
   npm i --save-dev json-server
   ```
-2. Ejecuta el siguiente comando:  
+2. Ejecutar el siguiente comando:  
    ```bash
    npm run backend
    ```
 
 Esto iniciará el servidor backend para pruebas.
+
+## Angular Material
+
+Se integraron diversos componentes de Angular Material para mejorar la experiencia de usuario y el diseño visual de la aplicación:
+
+- **Input Field**: Campos de entrada estilizados con validaciones integradas.
+- **Autocomplete**: Sugerencias dinámicas mientras el usuario escribe.
+- **Cards**: Tarjetas para mostrar información agrupada.
+- **Dialog (Modal)**: Ventanas modales para acciones específicas o detalles adicionales.
+- **SnackBar**: Notificaciones temporales en la parte inferior de la pantalla.
+- **Buttons**: Botones estilizados con colores y variantes configurables.
+
+Estas herramientas ayudan a crear una aplicación visualmente atractiva y fácil de usar.
+
+
+
 
 

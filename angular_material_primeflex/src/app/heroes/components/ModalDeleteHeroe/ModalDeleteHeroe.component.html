@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>¿Esta Seguro?</h2>
+<mat-dialog-content>
+  <p>Este proceso no es reversible, está a punto de elimiar a {{ data.superhero }}</p>
+  <!--
+  <mat-form-field>
+    <mat-label>Favorite Animal</mat-label>
+    <input matInput [(ngModel)]="animal" />
+  </mat-form-field>
+  -->
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <!--
+  Otra forma de cerrar el dialogo es usando el mat-dialog-close el cual si se desea puede ejecutar una funcion
+  del componente ts, en este caso se ejecuta la funcion funcion1()
+  <button mat-button [mat-dialog-close]="funcion1()" cdkFocusInitial>Eliminar</button>
+  -->
+  <span class="spacer"></span>
+  <button mat-button color="primary" (click)="onConfirm()" cdkFocusInitial>Eliminar</button>
+</mat-dialog-actions>

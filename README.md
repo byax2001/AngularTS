@@ -13,7 +13,6 @@
   - [Instalación de PrimeFlex](#instalar-primeflex)
 - [Instalación de Angular Material UI](#instalar-angular-material)
   - [Iconos Angular Material](#iconos-angular-material)
-- [Bootstrap vs PrimeNG vs Angular Material]
 - [Instalación y uso de la librería UIID (Ocasional)](#libreria-uiid)
 
 ### [Definición Angular FrameWork ](#definición-de-angular)
@@ -48,6 +47,19 @@
   - [Comunicación Global](#comunicación-global)
   - [Modulo para Centralización de Componentes de Librerias](#crear-un-módulo-centralizado-de-recursos-para-librerias)
   - [Ventajas de la Centralización en un Modulo](#ventajas-de-la-centralización-en-un-módulo)
+- [Pipes](#pipes)
+  - [Pipes del Sistema](#pipes-del-sistema)
+  - [Pipes Personalizados](#pipes-personalizados)
+- [Formularios Reactivos]
+
+### [Diseño, Diseño Responsivo y Estelización](#diseño-diseño-responsivo-y-estilización-en-angular)
+- [Bootstrap](#bootstrap)
+- [Prime](#prime)
+  - [PrimeNG](#primeng)
+  - [PrimeFlex](#primeflex)
+- [Angular Material](#angular-material)
+  - [Angular Material y PrimeFlex](#angular-y-primeflex)
+- [Transiciones y Efectos en Componentes, Animate.CSS](#transiciones-y-efectos-en-elementos-animatecss)
 
 ### [Lista de Directivas en Angular ](#lista-de-directivas)
 - [*ngIf](#ngif)
@@ -861,6 +873,219 @@ Este enfoque evita cargar configuraciones extensas directamente en `app.module.t
 - **Modularidad:** Facilita la reutilización de componentes y módulos en diferentes partes del proyecto.  
 - **Escalabilidad:** Reduce la carga de trabajo en `app.module.ts`.  
 - **Flexibilidad:** Permite decidir si los recursos serán compartidos de forma global o limitada a ciertos módulos.  
+
+---
+## Pipes
+
+Los **pipes** en Angular son herramientas que permiten transformar los datos en la plantilla antes de mostrarlos. Pueden ser usados tanto con los pipes integrados del sistema como con pipes personalizados para satisfacer necesidades específicas, manipulan los datos sin afectar su origen, de modo que funcionan como una funcion que devuelve un return.
+
+### Pipes del Sistema
+
+Angular proporciona una serie de **pipes integrados** que cubren transformaciones comunes, como formato de texto, fechas, números, y más. Aquí algunos ejemplos:
+
+1. **DatePipe**: Formatea fechas.  
+   Ejemplo:  
+   ```html
+   {{ today | date:'fullDate' }}
+   ```
+
+2. **UpperCasePipe y LowerCasePipe**: Convierte cadenas a mayúsculas o minúsculas.  
+   Ejemplo:  
+   ```html
+   {{ 'angular' | uppercase }} <!-- Resultado: ANGULAR -->
+   {{ 'ANGULAR' | lowercase }} <!-- Resultado: angular -->
+   ```
+
+3. **CurrencyPipe**: Da formato a valores monetarios.  
+   Ejemplo:  
+   ```html
+   {{ 1234.5 | currency:'USD' }}
+   ```
+
+4. **DecimalPipe**: Formatea números con decimales personalizados.  
+   Ejemplo:  
+   ```html
+   {{ 1234.5 | number:'1.2-2' }} <!-- Resultado: 1,234.50 -->
+   ```
+
+5. **JsonPipe**: Convierte objetos en cadenas JSON legibles.  
+   Ejemplo:  
+   ```html
+   {{ {name: 'Angular', version: 17} | json }}
+   ```
+
+6. **AsyncPipe**: Trabaja con valores asincrónicos como observables o promesas.  
+   Ejemplo:  
+   ```html
+   {{ dataObservable | async }}
+   ```
+
+### Pipes Personalizados
+
+Si necesitas una transformación específica que no está cubierta por los pipes del sistema, puedes crear **pipes personalizados**. Esto permite manejar datos según tus requerimientos sin modificar su fuente.
+
+#### Ejemplo: Pipe `heroImage`
+
+Este pipe genera una URL dinámica para cargar imágenes de héroes.
+
+1. **Creación del Pipe**  
+   Ejecuta el siguiente comando:  
+   ```bash
+   ng generate pipe heroImage
+   ```
+
+2. **Código del Pipe**  
+   El archivo generado `hero-image.pipe.ts` podría verse así:  
+   ```typescript
+   import { Pipe, PipeTransform } from '@angular/core';
+
+   @Pipe({
+     name: 'heroImage'
+   })
+   export class HeroImagePipe implements PipeTransform {
+     transform(heroId: string): string {
+       return `assets/heroes/${heroId}.jpg`;
+     }
+   }
+   ```
+3. **Declarar Pipe En el Modulo**  
+   Se debe de declarar el Pipe en el modulo que encapsula el archivo donde se utilizara el Pipe
+   ```ts
+    import { NgModule } from '@angular/core';
+    import { CommonModule } from '@angular/common';
+    import { HeroImagePipe } from './pipe/heroImage.pipe';
+
+    @NgModule({
+      declarations: [
+        HeroImagePipe
+      ],
+      imports: [
+        CommonModule
+      ]
+    })
+    export class HeroesModule { }
+   ```
+
+4. **Uso del Pipe**  
+   Para usar este pipe, inclúyelo en la plantilla:  
+   ```html
+   <img [src]="'123' | heroImage" alt="Hero Image">
+   ```
+
+
+#### Ventajas de los Pipes Personalizados:
+
+- Mantienen la lógica de transformación encapsulada.  
+- Permiten reutilizar la misma transformación en múltiples componentes.  
+- Facilitan la separación de preocupaciones entre los datos y la vista.
+
+### Consideraciones
+
+- Los pipes se deben declarar en el módulo correspondiente (`declarations` en el archivo `app.module.ts`).
+- Si el pipe será reutilizado en varios módulos, consídéralo como parte de un módulo compartido (`SharedModule`).
+
+---
+## Formularios Reactivos
+Para utilizar formularios reactivos es necesario importar ReactiveFormsModule en el modulo que contiene el componente a utilizar dicho formulario.
+Los formularios reactivos son de mayor utilidad a ngmodel u otras formas de obtener el valor de inputs, pues este metodo permite ver y manipula rvarios estados de un input y actuar en base a ello, cosas como si se cambio su valor a su forma original, que el input ah sido tocado y varios apartados que sirven de gran manera.
+
+Si se desea usar un formgroup es necesario que el conjunto de inputs sea encerrado por un elemento html, ya sea un div o por lo general un form.
+Para enlazar con los apartados del formulario reactivo creado en el componente usar el formControlName
+[formGroup]="heroForm"]
+
+--- 
+## Observable en Angular
+un observable es ... y permite utilziar varios metodos como una peticion en caso ...  entre estos estan pipes, ...
+
+---
+
+
+# Diseño, Diseño Responsivo y Estilización en Angular
+
+Existen diversos frameworks para el diseño y estelización en angular entre las herramientas cada una contando con sus ventajas y desventajas, de modo que dependiendo la situación pueden ser mas utiles unas de otras, entre las mas importantes estan:
+
+
+## Bootstrap
+
+> Página oficial: [Bootstrap](https://getbootstrap.com/docs/)
+
+**Bootstrap** es un framework CSS ampliamente utilizado que facilita la creación de diseños responsivos y estilización de componentes HTML. Ofrece una amplia variedad de utilidades que mejoran la experiencia del desarrollo.
+
+### Características destacadas:
+- **Diseño responsivo**: Sistema de cuadrícula (grid) flexible y adaptable a diferentes resoluciones.
+- **Componentes predefinidos**: Botones, alertas, formularios, modales y más.
+- **Estilización de componentes HTML**: Aplicación rápida de estilos visualmente atractivos.
+- **Extensibilidad**: Compatible con personalización mediante variables y archivos SCSS.
+
+### Ejemplos de componentes que se pueden agregar:
+- Menús de navegación.
+- Barras de progreso.
+- Paginación.
+- Tablas estilizadas.
+
+---
+
+## Prime
+
+### PrimeNG
+
+> Página oficial: [PrimeNG](https://primeng.org/installation)
+
+**PrimeNG** es una biblioteca de componentes para Angular que incluye elementos listos para usar en aplicaciones. Estos componentes son ideales como plantillas base para acelerar el desarrollo, sin embargo es necesario complementarlo con `PrimeFlex` para acceder a una capa superior de estilo y diseño con más herramientas además de agregar diseño resposivo.
+
+### Características destacadas:
+- **Variedad de componentes**: Desde botones y tablas hasta gráficos y calendarios.
+- **Integración con Angular**: Compatible y fácil de configurar.
+- **Temas**: Soporte para temas predefinidos para un diseño atractivo.
+
+### Ejemplos de componentes que se pueden agregar:
+- Tablas avanzadas con paginación y filtrado.
+- Carrousel de imágenes.
+- Gráficos interactivos.
+- Calendarios con selección de rango.
+
+### PrimeFlex
+
+>  Página oficial: [PrimeFlex](https://primeflex.org/installation)
+
+**PrimeFlex** complementa a **PrimeNG** proporcionando utilidades CSS para diseño responsivo y personalización. Ofrece un conjunto de clases que simplifican la creación de layouts complejos.
+
+### Características destacadas:
+- **Flexbox y Grid**: Clases para manejar alineación, distribución y diseño responsivo.
+- **Espaciado**: Clases para márgenes, rellenos y separación.
+- **Compatibilidad total con PrimeNG**: Permite estilizar y personalizar los componentes de PrimeNG.
+
+---
+
+## Angular Material
+
+> Página oficial: [Angular Material](https://material.angular.io/components/categories)
+
+**Angular Material** proporciona una colección de componentes modernos basados en el lenguaje de diseño Material Design de Google. Es ideal para crear interfaces atractivas y con buen rendimiento.
+
+#### Características destacadas:
+- **Componentes accesibles**: Cumplen con estándares de accesibilidad.
+- **Estilización consistente**: Diseño unificado siguiendo las pautas de Material Design.
+- **Animaciones fluidas**: Transiciones y efectos bien implementados.
+
+#### Ejemplos de componentes que se pueden agregar:
+- Tablas dinámicas con filtros y ordenamiento.
+- Formularios reactivos con validación.
+- Diálogos modales personalizables.
+- Menús desplegables.
+
+---
+
+### Angular y PrimeFlex
+
+El uso combinado de **Angular Material** y **PrimeFlex** es una estrategia poderosa para crear aplicaciones atractivas y bien estructuradas. **PrimeFlex** complementa a **Angular Material** al proporcionar utilidades CSS para ajustar y personalizar los diseños responsivos de manera detallada.
+
+#### Ventajas de combinar Angular Material y PrimeFlex:
+- Personalización avanzada de componentes.
+- Gestión eficiente del diseño responsivo.
+- Flexibilidad para implementar estilos únicos sin perder la consistencia de diseño.
+
+Ambos frameworks son compatibles y pueden usarse conjuntamente sin problemas, permitiendo a los desarrolladores aprovechar lo mejor de ambos mundos.
 
 ---
 
